@@ -1,0 +1,1 @@
+ReactDOM.render(React.createElement("p",{},"This is the first react element"),document.querySelector("#root"))
