@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Myh1 from "./Myh1";
 import MydifButton from "./Button";
+import Display from "./display";
 
 const App = () => {
   let [mytest, setmytest] = useState(1);
@@ -24,6 +25,7 @@ const App = () => {
     // </div>
     <div>
       <p>{mytest}</p>
+      <Display number={mytest} />
       <button onClick={increaseTest}>+</button>
 
       <button onClick={decreaseTest}>-</button>
