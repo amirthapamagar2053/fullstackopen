@@ -1,13 +1,13 @@
 import React from "react";
 
-const Myh1 = ({ name, lastName }) => {
-  newName = `new Name is ${name}`;
+const Myh1 = ({ name, lastName, count }) => {
+  let newName = `new Name is ${name}`;
   console.log(name);
 
   return (
     <h1>
       Hello to TEJ Fellow {newName}
-      {lastName}
+      {lastName} {count}
     </h1>
   );
 };
