@@ -28,6 +28,7 @@ const App = () => {
   return (
     <div>
       <Header course1={course} />
+      
       <Content
         part11={part1}
         part21={part2}
@@ -40,5 +41,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;
