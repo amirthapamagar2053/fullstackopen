@@ -1,4 +1,4 @@
-const Display = (props) => {
+const Statisticline = (props) => {
   return (
     <tr>
       <td>{props.status}</td>
@@ -6,4 +6,4 @@ const Display = (props) => {
     </tr>
   );
 };
-export default Display;
+export default Statisticline;

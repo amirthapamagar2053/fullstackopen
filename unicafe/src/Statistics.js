@@ -1,4 +1,4 @@
-import Display from "./Display";
+import Statisticline from "./Statisticline";
 const Statistics = (props) => {
   const calcALL = () => {
     return props.good + props.neutral + props.bad;
@@ -19,12 +19,12 @@ const Statistics = (props) => {
     return (
       <table>
         <tbody>
-          <Display status={"good"} value={props.good} />
-          <Display status={"neutral"} value={props.neutral} />
-          <Display status={"bad"} value={props.bad} />
-          <Display status={"all"} value={calcALL()} />
-          <Display status={"average"} value={calcAverage()} />
-          <Display status={"positive"} value={calcPositive()} />
+          <Statisticline status={"good"} value={props.good} />
+          <Statisticline status={"neutral"} value={props.neutral} />
+          <Statisticline status={"bad"} value={props.bad} />
+          <Statisticline status={"all"} value={calcALL()} />
+          <Statisticline status={"average"} value={calcAverage()} />
+          <Statisticline status={"positive"} value={calcPositive()} />
         </tbody>
       </table>
     );

@@ -19,19 +19,12 @@ const App = () => {
   const countVote = () => {
     let temp = Object.keys(obj);
     let keys = anecdotes[selected];
-    console.log(anecdotes[selected]);
-    console.log(selected);
-    console.log(temp);
-    console.log(obj);
     if (temp.length === 0) {
       setObj({ ...obj, [keys]: 1 });
     } else {
       if (temp.includes(keys)) {
-        console.log("found");
         setObj({ ...obj, [keys]: obj[keys] + 1 });
       } else {
-        console.log("Not found");
-
         setObj({ ...obj, [keys]: 1 });
       }
     }
@@ -45,13 +38,33 @@ const App = () => {
     }
   };
 
+  const analyzeVotes = () => {
+    let temp = 0;
+    let tempkey = "";
+    let result = 0;
+    for (let key in obj) {
+      temp = obj[key];
+      if (result < temp) {
+        tempkey = key;
+        result = temp;
+      }
+    }
+    return [result, tempkey];
+  };
+
+  let votes = analyzeVotes();
   return (
     <div>
+      <h1>Anecdote of the day </h1>
       {anecdotes[selected]}
       <br />
       <p> has {obj[anecdotes[selected]]} votes </p>
       <Button para={countVote} name="vote" />
+      &nbsp; &nbsp;
       <Button para={changePara} name="next anecdote" />
+      <h1>Anecdote with most votes</h1>
+      <p> {votes[1]} </p>
+      <p> has {votes[0]} votes </p>
     </div>
   );
 };
