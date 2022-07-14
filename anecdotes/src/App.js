@@ -14,8 +14,17 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
 
-  return <div>{anecdotes[selected]}
-  </div>;
+  const changePara = () => {
+    setSelected(selected + 1);
+  };
+
+  return (
+    <div>
+      {anecdotes[selected]}
+      <br />
+      <Button para={changePara} />
+    </div>
+  );
 };
 
 export default App;
