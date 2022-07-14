@@ -6,7 +6,7 @@ const App = (props) => {
       <p>
         This is the heading
         {props.notes.map((elements) => {
-          return <p>{elements.content}</p>;
+          return <p key="{elements.id}">{elements.content}</p>;
         })}
       </p>
     </div>
