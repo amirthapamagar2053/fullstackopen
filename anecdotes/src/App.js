@@ -14,6 +14,13 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
 
+  const [obj, setObj] = useState({});
+
+  const countVote = () =>{
+    setObj({...obj},)
+
+  }
+
   const changePara = () => {
     if (selected === anecdotes.length - 1) {
       setSelected(0);
@@ -26,7 +33,8 @@ const App = () => {
     <div>
       {anecdotes[selected]}
       <br />
-      <Button para={changePara} />
+      <Button para={changePara} name ="next anecdote"/>
+      <Button 
     </div>
   );
 };

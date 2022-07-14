@@ -1,5 +1,5 @@
 const Button = (props) => {
-  return <button onClick={props.para}>next anectode</button>;
+  return <button onClick={props.para}>{props.name}</button>;
 };
 
 export default Button;
