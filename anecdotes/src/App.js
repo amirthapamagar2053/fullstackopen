@@ -16,10 +16,26 @@ const App = () => {
 
   const [obj, setObj] = useState({});
 
-  const countVote = () =>{
-    setObj({...obj},)
+  const countVote = () => {
+    let temp = Object.keys(obj);
+    let keys = anecdotes[selected];
+    console.log(anecdotes[selected]);
+    console.log(selected);
+    console.log(temp);
+    console.log(obj);
+    if (temp.length === 0) {
+      setObj({ ...obj, [keys]: 1 });
+    } else {
+      if (temp.includes(keys)) {
+        console.log("found");
+        setObj({ ...obj, [keys]: obj[keys] + 1 });
+      } else {
+        console.log("Not found");
 
-  }
+        setObj({ ...obj, [keys]: 1 });
+      }
+    }
+  };
 
   const changePara = () => {
     if (selected === anecdotes.length - 1) {
@@ -33,8 +49,9 @@ const App = () => {
     <div>
       {anecdotes[selected]}
       <br />
-      <Button para={changePara} name ="next anecdote"/>
-      <Button 
+      <p> has {obj[anecdotes[selected]]} votes </p>
+      <Button para={countVote} name="vote" />
+      <Button para={changePara} name="next anecdote" />
     </div>
   );
 };
