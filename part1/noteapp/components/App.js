@@ -3,7 +3,12 @@
 const App = (props) => {
   return (
     <div>
-      <p>This is the heading{props.notes[1].content}</p>
+      <p>
+        This is the heading
+        {props.notes.map((elements) => {
+          return <p>{elements.content}</p>;
+        })}
+      </p>
     </div>
   );
 };
