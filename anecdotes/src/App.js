@@ -15,7 +15,11 @@ const App = () => {
   const [selected, setSelected] = useState(0);
 
   const changePara = () => {
-    setSelected(selected + 1);
+    if (selected === anecdotes.length - 1) {
+      setSelected(0);
+    } else {
+      setSelected(selected + 1);
+    }
   };
 
   return (
