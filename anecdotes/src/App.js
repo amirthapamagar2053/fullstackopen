@@ -31,11 +31,7 @@ const App = () => {
   };
 
   const changePara = () => {
-    if (selected === anecdotes.length - 1) {
-      setSelected(0);
-    } else {
-      setSelected(selected + 1);
-    }
+    setSelected(Math.floor(Math.random() * anecdotes.length));
   };
 
   const analyzeVotes = () => {
