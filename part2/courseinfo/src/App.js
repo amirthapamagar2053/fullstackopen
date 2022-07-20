@@ -1,6 +1,7 @@
 // import logo from './logo.svg';
 // import './App.css';
 import Course from "./Course";
+
 const App = () => {
   const course = {
     id: 1,
