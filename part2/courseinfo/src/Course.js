@@ -3,10 +3,17 @@ import Content from "./Content";
 
 const Course = (props) => {
   return (
-    <div>
+    <>
       <Header head={props.course.name} />
       <Content part={props.course.parts} />
-    </div>
+      <h3>
+        total of{" "}
+        {props.course.parts.reduce((previousValue, currentValue) => {
+          return previousValue + currentValue.exercises;
+        }, 0)}{" "}
+        exercises
+      </h3>
+    </>
   );
 };
 export default Course;

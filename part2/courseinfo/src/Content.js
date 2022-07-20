@@ -1,7 +1,7 @@
 import Part from "./Part";
 const Content = (props) => {
   return props.part.map((Element) => {
-    return <Part element={Element} />;
+    return <Part key={Element.id} element={Element} />;
   });
 };
 
