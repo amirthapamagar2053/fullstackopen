@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "back-end-server":"json-server --port 3001"
+    "back-server":"json-server --port 3002"
   },
   "eslintConfig": {
     "extends": [
@@ -41,3 +41,4 @@
     "axios": "^0.27.2"
   }
 }
+
