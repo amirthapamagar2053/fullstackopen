@@ -1,27 +1,67 @@
 import { useState } from "react";
+// import Filter from "./Search";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
-  console.log(persons);
+  const [newNum, setNum] = useState("");
+  const [text, setText] = useState("");
+
+  const inputtext = (event) => {
+    setText(event.target.value);
+    const test = persons.filter((x) => x.name.includes(event.target.value));
+    return  text.length === 0 ? persons : test;
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
-  };
 
+    if (persons.map((x) => x.name).includes(newName)) {
+      window.alert(`${newName} is already added to phonebook`);
+    } else {
+      const newObj = {
+        name: newName,
+        number: newNum,
+        id: persons.length + 1,
+      };
+      setPersons([...persons, newObj]);
+      setNewName("");
+      setNum("");
+    }
+  };
+  const changeHandler = (event) => {
+    setNewName(event.target.value);
+  };
+  const changeNumHandler = (event) => {
+    setNum(event.target.value);
+  };
   return (
     <div>
       <h2>Phonebook</h2>
       <form>
+        <input value={text} onChange={inputtext} id="test" />
+      </form>
+
+      <form onSubmit={submitHandler}>
         <div>
-          name: <input value={persons[0].name} onSubmit={submitHandler} />
+          name: <input value={newName} onChange={changeHandler} />
         </div>
+        <div>
+          number: <input value={newNum} onChange={changeNumHandler} />
+        </div>
+
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      ...
+      {persons.map((Element) => {
+        return (
+          <li key={Element.id}>
+            {Element.name} {Element.number}
+          </li>
+        );
+      })}
     </div>
   );
 };
