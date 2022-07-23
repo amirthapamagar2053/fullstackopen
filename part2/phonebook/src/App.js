@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 // import Filter from "./Search";
 
 const App = () => {
@@ -7,11 +8,15 @@ const App = () => {
   const [newNum, setNum] = useState("");
   const [text, setText] = useState("");
 
+  axios.get("http://localhost:3001/persons").then((response) => {
+    setPersons(response.data);
+  });
+
   const inputtext = (event) => {
     setText(event.target.value);
   };
   const test = persons.filter((x) => x.name.includes(text));
-  let displayName = test.length === 0 ? persons : test;
+  const displayName = test.length === 0 ? persons : test;
 
   const submitHandler = (event) => {
     event.preventDefault();
