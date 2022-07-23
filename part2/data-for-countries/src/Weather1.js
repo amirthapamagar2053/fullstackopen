@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const APIkey = process.env.REACT_APP_KEY; //? process.env.REACT_APP_KEY : 1234;
+const APIkey = process.env.REACT_APP_KEY ? process.env.REACT_APP_KEY : 1234;
 const Weather = ({ capital }) => {
   const [temp, setTemp] = useState(0);
   const [wind, setWind] = useState(0);
-  const[png,setPng] =useState("")
+  const [png, setPng] = useState("");
   axios
     .get(
       `http://api.weatherapi.com/v1/current.json?key=${APIkey}&q=${capital}&aqi=no`
@@ -14,7 +14,7 @@ const Weather = ({ capital }) => {
       console.log(response.data);
       setTemp(response.data.current["temp_c"]);
       setWind(response.data.current["wind_mph"]);
-      setPng(response.data.current.condition["icon"])
+      setPng(response.data.current.condition["icon"]);
     });
   // .catch((error) => console.log(error));
   return (
