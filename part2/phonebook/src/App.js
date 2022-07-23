@@ -9,9 +9,9 @@ const App = () => {
 
   const inputtext = (event) => {
     setText(event.target.value);
-    const test = persons.filter((x) => x.name.includes(event.target.value));
-    return  text.length === 0 ? persons : test;
   };
+  const test = persons.filter((x) => x.name.includes(text));
+  let displayName = test.length === 0 ? persons : test;
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -35,6 +35,7 @@ const App = () => {
   const changeNumHandler = (event) => {
     setNum(event.target.value);
   };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -55,7 +56,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((Element) => {
+      {displayName.map((Element) => {
         return (
           <li key={Element.id}>
             {Element.name} {Element.number}
