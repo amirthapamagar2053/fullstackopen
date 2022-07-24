@@ -22,8 +22,29 @@ const App = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-
-    if (persons.map((x) => x.name).includes(newName)) {
+    if (
+      persons.map((x) => x.name).includes(newName) &&
+      !persons.map((x) => x.number).includes(newNum)
+    ) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook,replace the old number with a new one?`
+        )
+      ) {
+        let filterObj = persons.filter((x) => x.name.includes(newName));
+        let filternumber = { ...filterObj[0], number: newNum };
+        axios
+          .put(`http://localhost:3001/persons/${filterObj[0].id}`, filternumber)
+          .then((response) => {
+            let filarr = persons.map((x) =>
+              x.id !== filternumber.id ? x : filternumber
+            );
+            setPersons(filarr);
+            setNewName("");
+            setNum("");
+          });
+      }
+    } else if (persons.map((x) => x.name).includes(newName)) {
       window.alert(`${newName} is already added to phonebook`);
     } else {
       const newObj = {
@@ -32,7 +53,7 @@ const App = () => {
         id: persons.length + 1,
       };
       axios.post("http://localhost:3001/persons", newObj).then((response) => {
-        setPersons([...persons, response.data]);
+        setPersons([...persons, newObj]);
         setNewName("");
         setNum("");
       });
@@ -43,6 +64,16 @@ const App = () => {
   };
   const changeNumHandler = (event) => {
     setNum(event.target.value);
+  };
+  const clickDel = (delname, delid) => {
+    window.confirm(`Delete ${delname} ?`)
+      ? axios
+          .delete(`http://localhost:3001/persons/${delid}`)
+          .then((response) => {
+            const filtarr = persons.filter((x) => x.id !== delid);
+            setPersons(filtarr);
+          })
+      : console.log("not deleted");
   };
 
   return (
@@ -69,7 +100,14 @@ const App = () => {
       {displayName.map((Element) => {
         return (
           <li key={Element.id}>
-            {Element.name} {Element.number}
+            {Element.name} {Element.number}{" "}
+            <button
+              onClick={() => {
+                clickDel(Element.name, Element.id);
+              }}
+            >
+              delete
+            </button>
           </li>
         );
       })}
