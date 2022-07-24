@@ -2,8 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import Weather from "./Weather1";
 import React from "react";
-// console.log(typeof event.target.value);
-// console.log( event.target.value.length);
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -13,13 +11,11 @@ function App() {
     setText(event.target.value);
 
     axios.get("https://restcountries.com/v3.1/all").then((response) => {
-      // console.log(response.data);
       let searchedCountries = response.data.filter((x) => {
         return x.name.common
           .toLowerCase()
           .includes(event.target.value.toLowerCase());
       });
-      // let displaycountries = searchedCountries.map((x) => x.name.common);
       setCountries(event.target.value.length === 0 ? [] : searchedCountries);
     });
   };
@@ -27,9 +23,6 @@ function App() {
   const clickFunc = (showcountries) => {
     setCountries(showcountries);
   };
-  // const test = () => {
-  //   console.log("test");
-  // };
 
   return (
     <div>
@@ -52,8 +45,16 @@ function App() {
         ) : (
           countries.map((x) => (
             <>
-              (<p key={x.name.common}>{x.name.common}</p>) (
-              <button onClick={clickFunc([x])}>show</button>)
+              <p key={x.name.common}>
+                {x.name.common}{" "}
+                <button
+                  onClick={() => {
+                    clickFunc([x]);
+                  }}
+                >
+                  show
+                </button>
+              </p>
             </>
           ))
         )}
