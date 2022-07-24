@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 // import Filter from "./Search";
 
@@ -8,9 +8,11 @@ const App = () => {
   const [newNum, setNum] = useState("");
   const [text, setText] = useState("");
 
-  axios.get("http://localhost:3001/persons").then((response) => {
-    setPersons(response.data);
-  });
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const inputtext = (event) => {
     setText(event.target.value);
@@ -29,9 +31,11 @@ const App = () => {
         number: newNum,
         id: persons.length + 1,
       };
-      setPersons([...persons, newObj]);
-      setNewName("");
-      setNum("");
+      axios.post("http://localhost:3001/persons", newObj).then((response) => {
+        setPersons([...persons, response.data]);
+        setNewName("");
+        setNum("");
+      });
     }
   };
   const changeHandler = (event) => {
@@ -45,6 +49,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <form>
+        filter shown with
         <input value={text} onChange={inputtext} id="test" />
       </form>
 
