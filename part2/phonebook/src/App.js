@@ -7,6 +7,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNum, setNum] = useState("");
   const [text, setText] = useState("");
+  const [message, setMessage] = useState(null);
+  const [users, setusers] = useState(persons.length);
 
   useEffect(() => {
     axios.get("http://localhost:3001/persons").then((response) => {
@@ -33,16 +35,23 @@ const App = () => {
       ) {
         let filterObj = persons.filter((x) => x.name.includes(newName));
         let filternumber = { ...filterObj[0], number: newNum };
-        axios
-          .put(`http://localhost:3001/persons/${filterObj[0].id}`, filternumber)
-          .then((response) => {
-            let filarr = persons.map((x) =>
-              x.id !== filternumber.id ? x : filternumber
-            );
-            setPersons(filarr);
-            setNewName("");
-            setNum("");
-          });
+        if (persons.length !== users) {
+          setMessage(`Information of ${filternumber.name} has been deleted`);
+        } else {
+          axios
+            .put(
+              `http://localhost:3001/persons/${filterObj[0].id}`,
+              filternumber
+            )
+            .then((response) => {
+              let filarr = persons.map((x) =>
+                x.id !== filternumber.id ? x : filternumber
+              );
+              setPersons(filarr);
+              setNewName("");
+              setNum("");
+            });
+        }
       }
     } else if (persons.map((x) => x.name).includes(newName)) {
       window.alert(`${newName} is already added to phonebook`);
@@ -54,6 +63,10 @@ const App = () => {
       };
       axios.post("http://localhost:3001/persons", newObj).then((response) => {
         setPersons([...persons, newObj]);
+        setMessage("Added " + newName);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
         setNewName("");
         setNum("");
       });
@@ -76,9 +89,20 @@ const App = () => {
       : console.log("not deleted");
   };
 
+  const errorCss = {
+    color: "red",
+    background: "lightgrey",
+    fontSize: "20px",
+    borderStyle: "solid",
+    borderRadius: "5px",
+    padding: "10px",
+    marginBottom: "10px",
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div style={errorCss}>{message}</div>
       <form>
         filter shown with
         <input value={text} onChange={inputtext} id="test" />
