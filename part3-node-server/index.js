@@ -1,10 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 // const { text, response, json } = require("express");
 const App = express();
 
 App.use(cors());
 App.use(express.json());
+
+App.use();
 
 let persons = [
   {
@@ -55,13 +58,15 @@ App.delete("/persons/:id", (req, res) => {
 App.post("/persons/", (req, res) => {
   let myIncomingData = req.body;
   myIncomingData.id = Math.floor(Math.random() * 60);
-  persons.push(myIncomingData);
   if (
     persons.map((x) => x.name).includes(myIncomingData.name) &&
     persons.map((x) => x.number).includes(myIncomingData.number)
   )
     res.send({ error: "name must be unique" });
-  else res.status(201).json(myIncomingData);
+  else {
+    persons.push(myIncomingData);
+    res.status(201).json(myIncomingData);
+  }
 });
 
 App.listen("3001", () => console.log("starting the dev server"));
