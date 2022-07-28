@@ -7,7 +7,12 @@ const App = express();
 App.use(cors());
 App.use(express.json());
 
-App.use();
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+App.use(
+  morgan(
+    ":method :url :status :response-time ms - :res[conteny-length] :body -req:[content-length]"
+  )
+);
 
 let persons = [
   {
@@ -58,6 +63,7 @@ App.delete("/persons/:id", (req, res) => {
 App.post("/persons/", (req, res) => {
   let myIncomingData = req.body;
   myIncomingData.id = Math.floor(Math.random() * 60);
+
   if (
     persons.map((x) => x.name).includes(myIncomingData.name) &&
     persons.map((x) => x.number).includes(myIncomingData.number)
