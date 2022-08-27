@@ -11,7 +11,7 @@ const App = () => {
   const [users, setusers] = useState(persons.length);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get("http://localhost:3001/api/persons").then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -40,7 +40,7 @@ const App = () => {
         } else {
           axios
             .put(
-              `http://localhost:3001/persons/${filterObj[0].id}`,
+              `http://localhost:3001/api/persons/${filterObj[0].id}`,
               filternumber
             )
             .then((response) => {
@@ -61,15 +61,17 @@ const App = () => {
         number: newNum,
         id: persons.length + 1,
       };
-      axios.post("http://localhost:3001/persons", newObj).then((response) => {
-        setPersons([...persons, newObj]);
-        setMessage("Added " + newName);
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
-        setNewName("");
-        setNum("");
-      });
+      axios
+        .post("http://localhost:3001/api/persons", newObj)
+        .then((response) => {
+          setPersons([...persons, newObj]);
+          setMessage("Added " + newName);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+          setNewName("");
+          setNum("");
+        });
     }
   };
   const changeHandler = (event) => {
@@ -81,7 +83,7 @@ const App = () => {
   const clickDel = (delname, delid) => {
     window.confirm(`Delete ${delname} ?`)
       ? axios
-          .delete(`http://localhost:3001/persons/${delid}`)
+          .delete(`http://localhost:3001/api/persons/${delid}`)
           .then((response) => {
             const filtarr = persons.filter((x) => x.id !== delid);
             setPersons(filtarr);
