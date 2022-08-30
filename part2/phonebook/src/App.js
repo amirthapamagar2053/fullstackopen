@@ -46,6 +46,7 @@ const App = () => {
               x.id !== filternumber.id ? x : filternumber
             );
             setPersons(filarr);
+            setMessage(`Information of ${filternumber.name} has been updated`);
             setStatus("message");
             setNewName("");
             setNum("");
@@ -97,6 +98,9 @@ const App = () => {
           setPersons(filtarr);
           setMessage(`${delname} has been deleted`);
           setStatus("delete");
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         })
       : console.log("not deleted");
   };
