@@ -73,7 +73,7 @@ const App = () => {
           setMessage("Added " + newName);
           setTimeout(() => {
             setMessage(null);
-          }, 25000);
+          }, 5000);
           setNewName("");
           setNum("");
         })
