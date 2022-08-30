@@ -1,15 +1,9 @@
-import { useState } from "react";
-
-const Filter = (props) => {
-  const [text, setText] = useState("");
-  const inputtext = (event) => {
-    setText(event.target.value);
-    props.persons.filter((x) => x.name.includes(event.target.value));
-  };
+const Search = ({ text, inputtext }) => {
   return (
     <form>
-      <input value={text} onChange={inputtext} />
+      Filter Shown With &nbsp;
+      <input value={text} onChange={inputtext} id="test" />
     </form>
   );
 };
-export default Filter;
+export default Search;

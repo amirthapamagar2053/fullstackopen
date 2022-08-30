@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-// import Filter from "./Search";
+import phonebookService from "./services/phonebook";
+import PersonSubmit from "./PersonSubmit";
+import Content from "./Content";
+import Search from "./Search";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -8,11 +11,11 @@ const App = () => {
   const [newNum, setNum] = useState("");
   const [text, setText] = useState("");
   const [message, setMessage] = useState(null);
-  const [users, setusers] = useState(persons.length);
+  const [classStatus, setStatus] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/persons").then((response) => {
-      setPersons(response.data);
+    phonebookService.getAll().then((data) => {
+      setPersons(data);
     });
   }, []);
 
@@ -23,6 +26,7 @@ const App = () => {
   const displayName = test.length === 0 ? persons : test;
 
   const submitHandler = (event) => {
+    console.log("Submit triggered");
     event.preventDefault();
     if (
       persons.map((x) => x.name).includes(newName) &&
@@ -35,108 +39,83 @@ const App = () => {
       ) {
         let filterObj = persons.filter((x) => x.name.includes(newName));
         let filternumber = { ...filterObj[0], number: newNum };
-        if (persons.length !== users) {
-          setMessage(`Information of ${filternumber.name} has been deleted`);
-        } else {
-          axios
-            .put(
-              `http://localhost:3001/api/persons/${filterObj[0].id}`,
-              filternumber
-            )
-            .then((response) => {
-              let filarr = persons.map((x) =>
-                x.id !== filternumber.id ? x : filternumber
-              );
-              setPersons(filarr);
-              setNewName("");
-              setNum("");
-            });
-        }
+        phonebookService
+          .update(filterObj[0].id, filternumber)
+          .then((response) => {
+            let filarr = persons.map((x) =>
+              x.id !== filternumber.id ? x : filternumber
+            );
+            setPersons(filarr);
+            setStatus("message");
+            setNewName("");
+            setNum("");
+          })
+          .catch((error) => {
+            setMessage(`Information of ${filternumber.name} has been deleted`);
+            setStatus("delete");
+          });
       }
     } else if (persons.map((x) => x.name).includes(newName)) {
       window.alert(`${newName} is already added to phonebook`);
     } else {
+      console.log(persons.length);
       const newObj = {
         name: newName,
         number: newNum,
         id: persons.length + 1,
       };
-      axios
-        .post("http://localhost:3001/api/persons", newObj)
+      phonebookService
+        .create(newObj)
         .then((response) => {
-          setPersons([...persons, newObj]);
+          console.log("the response is", response);
+          setPersons([...persons, response]);
+          setStatus("message");
           setMessage("Added " + newName);
           setTimeout(() => {
             setMessage(null);
-          }, 5000);
+          }, 25000);
           setNewName("");
           setNum("");
+        })
+        .catch((error) => {
+          console.log("the error is ", error);
         });
     }
   };
   const changeHandler = (event) => {
+    console.log("name entered");
     setNewName(event.target.value);
   };
   const changeNumHandler = (event) => {
+    console.log("num entered");
     setNum(event.target.value);
   };
   const clickDel = (delname, delid) => {
     window.confirm(`Delete ${delname} ?`)
-      ? axios
-          .delete(`http://localhost:3001/api/persons/${delid}`)
-          .then((response) => {
-            const filtarr = persons.filter((x) => x.id !== delid);
-            setPersons(filtarr);
-          })
+      ? phonebookService.remove(delid).then((response) => {
+          const filtarr = persons.filter((x) => x.id !== delid);
+          setPersons(filtarr);
+          setMessage(`${delname} has been deleted`);
+          setStatus("delete");
+        })
       : console.log("not deleted");
-  };
-
-  const errorCss = {
-    color: "red",
-    background: "lightgrey",
-    fontSize: "20px",
-    borderStyle: "solid",
-    borderRadius: "5px",
-    padding: "10px",
-    marginBottom: "10px",
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div style={errorCss}>{message}</div>
-      <form>
-        filter shown with
-        <input value={text} onChange={inputtext} id="test" />
-      </form>
-
-      <form onSubmit={submitHandler}>
-        <div>
-          name: <input value={newName} onChange={changeHandler} />
-        </div>
-        <div>
-          number: <input value={newNum} onChange={changeNumHandler} />
-        </div>
-
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Notification classStatus={classStatus} message={message} />
+      <Search text={text} inputtext={inputtext} />
+      <PersonSubmit
+        submitHandler={submitHandler}
+        changeHandler={changeHandler}
+        changeNumHandler={changeNumHandler}
+        newName={newName}
+        newNum={newNum}
+      />
+      &nbsp;
       <h2>Numbers</h2>
-      {displayName.map((Element) => {
-        return (
-          <li key={Element.id}>
-            {Element.name} {Element.number}{" "}
-            <button
-              onClick={() => {
-                clickDel(Element.name, Element.id);
-              }}
-            >
-              delete
-            </button>
-          </li>
-        );
-      })}
+      <Content displayName={displayName} clickDel={clickDel} />
     </div>
   );
 };
