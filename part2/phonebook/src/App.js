@@ -37,11 +37,13 @@ const App = () => {
           `${newName} is already added to phonebook,replace the old number with a new one?`
         )
       ) {
+        console.log("I am in update");
         let filterObj = persons.filter((x) => x.name.includes(newName));
         let filternumber = { ...filterObj[0], number: newNum };
         phonebookService
           .update(filterObj[0].id, filternumber)
           .then((response) => {
+            console.log("the response is", response);
             let filarr = persons.map((x) =>
               x.id !== filternumber.id ? x : filternumber
             );
@@ -52,14 +54,12 @@ const App = () => {
             setNum("");
           })
           .catch((error) => {
+            console.log(error);
             setMessage(`Information of ${filternumber.name} has been deleted`);
             setStatus("delete");
           });
       }
-    } else if (persons.map((x) => x.name).includes(newName)) {
-      window.alert(`${newName} is already added to phonebook`);
     } else {
-      console.log(persons.length);
       const newObj = {
         name: newName,
         number: newNum,
@@ -68,7 +68,6 @@ const App = () => {
       phonebookService
         .create(newObj)
         .then((response) => {
-          console.log("the response is", response);
           setPersons([...persons, response]);
           setStatus("message");
           setMessage("Added " + newName);
@@ -84,11 +83,9 @@ const App = () => {
     }
   };
   const changeHandler = (event) => {
-    console.log("name entered");
     setNewName(event.target.value);
   };
   const changeNumHandler = (event) => {
-    console.log("num entered");
     setNum(event.target.value);
   };
   const clickDel = (delname, delid) => {
