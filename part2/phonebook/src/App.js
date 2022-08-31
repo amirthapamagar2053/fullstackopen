@@ -39,25 +39,36 @@ const App = () => {
       ) {
         console.log("I am in update");
         let filterObj = persons.filter((x) => x.name.includes(newName));
+        console.log("the filterObj is", filterObj);
         let filternumber = { ...filterObj[0], number: newNum };
         phonebookService
           .update(filterObj[0].id, filternumber)
           .then((response) => {
             console.log("the response is", response);
-            let filarr = persons.map((x) =>
-              x.id !== filternumber.id ? x : filternumber
-            );
-            setPersons(filarr);
-            setMessage(`Information of ${filternumber.name} has been updated`);
-            setStatus("message");
-            setNewName("");
-            setNum("");
-          })
-          .catch((error) => {
-            console.log(error);
-            setMessage(`Information of ${filternumber.name} has been deleted`);
-            setStatus("delete");
+            if (response !== "error") {
+              setPersons(
+                persons.map((x) =>
+                  x.id !== filternumber.id ? x : filternumber
+                )
+              );
+              setMessage(
+                `Information of ${filternumber.name} has been updated`
+              );
+              setStatus("message");
+              setNewName("");
+              setNum("");
+            } else {
+              setMessage(
+                `Information of ${filternumber.name} has been deleted`
+              );
+              setStatus("delete");
+            }
           });
+        // .catch((error) => {
+        //   console.log("the error is", error.message);
+        //   setMessage(`Information of ${filternumber.name} has been deleted`);
+        //   setStatus("delete");
+        // });
       }
     } else {
       const newObj = {
@@ -68,17 +79,28 @@ const App = () => {
       phonebookService
         .create(newObj)
         .then((response) => {
-          setPersons([...persons, response]);
-          setStatus("message");
-          setMessage("Added " + newName);
+          if (response.error) {
+            //Condition for the incorrect data format from the express server
+            setMessage("Enter the data correctly");
+            setStatus("delete");
+          } else {
+            setPersons([...persons, response]);
+            setStatus("message");
+            setMessage("Added " + newName);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            setNewName("");
+            setNum("");
+          }
+        })
+        .catch((error) => {
+          setMessage(error.response.data.error); //Handling the error from the mongoose schema
           setTimeout(() => {
             setMessage(null);
           }, 5000);
-          setNewName("");
-          setNum("");
-        })
-        .catch((error) => {
-          console.log("the error is ", error);
+          setStatus("delete");
+          // console.log("the error is ", error);
         });
     }
   };
@@ -93,6 +115,7 @@ const App = () => {
       ? phonebookService.remove(delid).then((response) => {
           const filtarr = persons.filter((x) => x.id !== delid);
           setPersons(filtarr);
+          console.log(persons);
           setMessage(`${delname} has been deleted`);
           setStatus("delete");
           setTimeout(() => {
