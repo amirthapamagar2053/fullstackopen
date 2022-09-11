@@ -63,7 +63,8 @@ const App = () => {
               );
               setStatus("delete");
             }
-          });
+          })
+          .catch((error) => console.log(error));
         // .catch((error) => {
         //   console.log("the error is", error.message);
         //   setMessage(`Information of ${filternumber.name} has been deleted`);
@@ -79,11 +80,18 @@ const App = () => {
       phonebookService
         .create(newObj)
         .then((response) => {
+          console.log(response);
           if (response.error) {
             //Condition for the incorrect data format from the express server
             setMessage("Enter the data correctly");
             setStatus("delete");
-          } else {
+          }
+          // Condition for handling data from the response from the express server
+          // else if (response.unique) {
+          //   setMessage("Name must be unique");
+          //   setStatus("delete");
+          // }
+          else {
             setPersons([...persons, response]);
             setStatus("message");
             setMessage("Added " + newName);
@@ -95,7 +103,10 @@ const App = () => {
           }
         })
         .catch((error) => {
+          console.log("the catch error is", error.response.data.error);
+          console.dir(error);
           setMessage(error.response.data.error); //Handling the error from the mongoose schema
+
           setTimeout(() => {
             setMessage(null);
           }, 5000);
